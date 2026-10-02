@@ -17,7 +17,7 @@
 - 서비스키 로드 (실 호출하는 모든 셸 명령 앞에서):
 
 ```bash
-K=$(grep -m1 'export DATA_GO_KR_API_KEY' ~/.zshrc | cut -d= -f2- | tr -d '"' | tr -d "'")
+K=$(grep -m1 'export OPENDATA_API_KEY' ~/.zshrc | cut -d= -f2- | tr -d '"' | tr -d "'")
 FIX=/private/tmp/claude-501/-Users-frankoh-src-workspace-moneyflow/3fcaf621-532b-4e7d-a6c6-767706e37219/scratchpad/customs-fixtures
 B=https://apis.data.go.kr/1220000
 ```
@@ -258,7 +258,7 @@ Claude-Session: https://claude.ai/code/session_01Qw5e3X1n3xofs8Vm5BbW7W"
 
 - [ ] **Step 1: 선행 조건 확인**
 
-Run: `grep -c 'export DATA_GO_KR_API_KEY' ~/.zshrc`
+Run: `grep -c 'export OPENDATA_API_KEY' ~/.zshrc`
 Expected: `1`. **0 이면 여기서 멈추고 사용자에게 보고한다** — data.go.kr 서비스키 발급과 17개 API 활용신청이 필요하다(스펙 "선행 조건"). Task 3 이후 중 원본만으로 쓸 수 있는 부분(요청 인자 표·응답 필드 초안)은 진행할 수 있지만 "샘플"·"함정"·출력포맷은 비워 두지 말고 이 태스크가 끝난 뒤 채운다.
 
 - [ ] **Step 2: 정상 케이스 17개** — 기간은 `202601`~`202606`(1년 이내). 샘플 코드: 국가 `US`/`CN`, HS `8542`(전자집적회로), HS6 `854232`(메모리), 시도 `41`(경기도), 수출 `imexTpcd=1`.
@@ -606,7 +606,7 @@ Expected: `18`, `ok`, `utf8-ok`, `links-ok`.
 
 ## 인증
 
-data.go.kr 에서 발급받은 서비스키를 `DATA_GO_KR_API_KEY` 환경변수로 둔다.
+data.go.kr 에서 발급받은 서비스키를 `OPENDATA_API_KEY` 환경변수로 둔다.
 API 마다 포털에서 활용신청이 필요하다.
 ```
 

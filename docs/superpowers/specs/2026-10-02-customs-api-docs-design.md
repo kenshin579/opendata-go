@@ -148,7 +148,7 @@ API 마다:
 
 ## 선행 조건 (사용자 작업)
 
-- data.go.kr 서비스키를 `~/.zshrc` 에 `DATA_GO_KR_API_KEY` 로 둔다 (디코딩 키 권장 — 실측으로 확정)
+- data.go.kr 서비스키를 `~/.zshrc` 에 `OPENDATA_API_KEY` 로 둔다 (디코딩 키 권장 — 실측으로 확정)
 - 17개 API 각각 **활용신청**(개발계정, 자동승인). 미신청 API 는 게이트웨이 에러로 막힌다
 
 키가 없으면 문서 작업 중 Swagger 기반 표까지만 쓰고 실측 대조는 멈춘다.
@@ -162,7 +162,7 @@ API 마다:
 
 문서 검수 후 별도 스펙·플랜으로 확정. 지금 합의된 방향만 적는다.
 
-- 루트 `opendata`: `NewClient(serviceKey, opts...)` / `NewClientFromEnv()`(`DATA_GO_KR_API_KEY`),
+- 루트 `opendata`: `NewClient(serviceKey, opts...)` / `NewClientFromEnv()`(`OPENDATA_API_KEY`),
   옵션 `WithBaseURL`·`WithTimeout`(기본 30s)·`WithHTTPClient`. 게이트웨이 호출·봉투 파싱·에러 매핑·
   페이지 반복을 기관 패키지에 제공. **에러 메시지·URL 로그에서 serviceKey 마스킹**(쿼리스트링에 실리므로 필수)
 - `customs`: `customs.New(client)` + API 17개 메서드. 기간이 1년을 넘으면 1년 창으로 나눠 이어 붙이는
