@@ -19,7 +19,7 @@ moneyflow 에 국내 수출 데이터 페이지를 만들고 싶다. 수출 통�
 ## 패키지 구조 (2단계 기준, 문서 구조도 이를 따른다)
 
 ```
-opendata/            # 루트 패키지: Client, 서비스키, 게이트웨이 호출, 봉투 파싱, 에러, 페이지 반복
+opendata/            # 루트 패키지: Client, 서비스키, 게이트웨이 호출, 봉투 파싱, 에러 (페이지네이션 없음 — 실측)
 opendata/customs/    # 관세청(기관코드 1220000) 수출입실적 17개
 opendata/<기관>/      # 이후 필요할 때 추가
 ```
@@ -85,13 +85,13 @@ API 상세 페이지는 두 형식이다 — 15개는 페이지에 **Swagger 2.0
 - 시도·시군구 계열(13~17): `priodTitle`, `expUsdAmt`/`impUsdAmt`/`cmtrBlncAmt`, `expLnCnt` 등.
   16·17만 Swagger 에 `body.totalCount` 가 있다
 
-Swagger 어디에도 `pageNo`·`numOfRows`·`_type` 이 없다 — **페이지네이션과 JSON 지원은 실측 전까지 모른다.**
+Swagger 어디에도 `pageNo`·`numOfRows`·`_type` 이 없다. **실측 결과 페이지네이션은 없고(`numOfRows`·`pageNo` 무시, 한 번에 전체 행) 출력은 XML 뿐이다(`_type=json` 은 게이트웨이 에러 04).** 상세는 `docs/api/README.md#공통-인자`.
 
 기타:
 
 - 기간 `strtYymm`·`endYymm` 은 YYYYMM, **조회기간 1년 이내**(명세 문구)
-- 금액 USD — 수출 FOB(신고금액), 수입 CIF(과세가격). 중량 순중량 kg.
-- 출력: XML(포털 표기). JSON(`_type=json` 등) 지원 여부는 실측으로 확인.
+- 금액 USD — 수출 FOB(신고금액), 수입 CIF(과세가격). 중량 순중량 kg. 단 API 13~17 은 실측상 **천 달러**(명세는 "달러").
+- 출력: XML 전용(실측). JSON 요청 방식은 모두 무시되거나 에러다.
 - 갱신: 매월 15일경 전월까지 현행화(정정·취하 반영). 최근월은 잠정치라 바뀔 수 있다.
 - 트래픽: 개발계정 API별 1일 10,000 건.
 - 공통 코드(국가·품목·성질·세관·시도 등)는 `관세청조회코드_v1.3.xlsx` 에 있다.
@@ -139,12 +139,12 @@ API 마다:
 
 완료 후 체크리스트:
 
-- [ ] `docs/api/customs/` 에 17개 문서 + README 가 있다
-- [ ] 각 문서 요청 인자 표가 Swagger 와 일치한다
-- [ ] 각 문서 응답 필드 표가 실 응답 태그와 전수 일치한다
-- [ ] 공통 README 에 게이트웨이 에러·서비스 에러 실 응답이 모두 실려 있다
-- [ ] 서비스키가 어떤 파일에도 들어가지 않았다 (`grep`)
-- [ ] 인덱스 링크가 모두 유효하고 파일이 UTF-8 이다
+- [x] `docs/api/customs/` 에 17개 문서 + README 가 있다
+- [x] 각 문서 요청 인자 표가 Swagger 와 일치한다
+- [x] 각 문서 응답 필드 표가 실 응답 태그와 전수 일치한다
+- [x] 공통 README 에 게이트웨이 에러·서비스 에러 실 응답이 모두 실려 있다
+- [x] 서비스키가 어떤 파일에도 들어가지 않았다 (`grep`)
+- [x] 인덱스 링크가 모두 유효하고 파일이 UTF-8 이다
 
 ## 선행 조건 (사용자 작업)
 
@@ -163,11 +163,14 @@ API 마다:
 문서 검수 후 별도 스펙·플랜으로 확정. 지금 합의된 방향만 적는다.
 
 - 루트 `opendata`: `NewClient(serviceKey, opts...)` / `NewClientFromEnv()`(`OPENDATA_API_KEY`),
-  옵션 `WithBaseURL`·`WithTimeout`(기본 30s)·`WithHTTPClient`. 게이트웨이 호출·봉투 파싱·에러 매핑·
-  페이지 반복을 기관 패키지에 제공. **에러 메시지·URL 로그에서 serviceKey 마스킹**(쿼리스트링에 실리므로 필수)
-- `customs`: `customs.New(client)` + API 17개 메서드. 기간이 1년을 넘으면 1년 창으로 나눠 이어 붙이는
-  `...All` 헬퍼. 숫자 필드는 원본 문자열 보존 + 파싱 헬퍼
-- 에러: 결과 없음 → `ErrNoData`, 게이트웨이 에러(키·한도) → `*GatewayError`, 서비스 에러 → `*APIError`
+  옵션 `WithBaseURL`·`WithTimeout`(기본 30s)·`WithHTTPClient`. 게이트웨이 호출·봉투(XML) 파싱·에러 매핑을
+  기관 패키지에 제공. 페이지네이션이 없으므로 페이지 반복 헬퍼는 두지 않는다. **에러 메시지·URL 로그에서 serviceKey 마스킹**(쿼리스트링에 실리므로 필수)
+- `customs`: `customs.New(client)` + API 17개 메서드. `...All` 헬퍼는 기간을 12개월 이하 창으로
+  나눠 이어 붙이는 일만 한다. 숫자 필드는 원본 문자열 보존 + 파싱 헬퍼(13~17 은 공백 패딩·천 단위
+  콤마 문자열, 금액은 천 달러). 총계 행은 위치가 아니라 기간 필드(`year`/`priodTitle`) == `총계` 로 판별
+- 에러: 0건은 `resultCode` 00 + `<items/>` 라 에러가 아니다 → `ErrNoData` 대신 **빈 슬라이스** 반환으로
+  재검토. 게이트웨이 에러(`OpenAPI_ServiceResponse`, HTTP 401/403/400) → `*GatewayError`, 서비스 에러
+  (`resultCode` 99 + HTTP 200, 원인은 `resultMsg` 로만 구분) → `*APIError`. HTTP 상태가 아니라 본문 루트로 가른다
 - 외부 의존성 0(표준 라이브러리, `encoding/xml`), Go 1.25, `httptest` + `testdata/` fixture,
   `-tags integration` 실 호출
 - 릴리스: `scripts/release.sh` 재사용 → v0.1.0 → moneyflow `go.mod` 에 태그로 추가

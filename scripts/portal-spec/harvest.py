@@ -35,16 +35,24 @@ def fetch(url, data=None):
         return r.read()
 
 
+def must(m, data_id, what):
+    """정규식 매치가 없으면 데이터 ID 와 찾지 못한 대상을 밝히고 종료한다(포털 페이지 구조 변경 대비)."""
+    if m is None:
+        raise SystemExit(f"{data_id}: {what} 을(를) 페이지에서 찾지 못함 — 포털 페이지 구조가 바뀌었는지 확인")
+    return m
+
+
 def harvest_spec(data_id, src):
     page = fetch(f"{PORTAL}/data/{data_id}/openapi.do").decode("utf-8")
-    title = html.unescape(re.search(r"<title>(.*?)</title>", page, re.S).group(1).split("|")[0].strip())
+    title = html.unescape(must(re.search(r"<title>(.*?)</title>", page, re.S), data_id, "<title>").group(1).split("|")[0].strip())
     sj = re.search(r"const swaggerJson = `(.*?)`;", page, re.S)
     if sj and sj.group(1).strip():
         spec = json.loads(sj.group(1))
-        (src / f"{data_id}.swagger.json").write_text(json.dumps(spec, ensure_ascii=False, indent=2) + "\n")
+        (src / f"{data_id}.swagger.json").write_text(json.dumps(spec, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return title, "swagger"
-    pk = re.search(r'id="publicDataDetailPk" value="([^"]+)"', page).group(1)
-    sel = re.search(r'id="open_api_detail_select".*?</select>', page, re.S).group(0)
+    pk = must(re.search(r'id="publicDataDetailPk" value="([^"]+)"', page), data_id, "publicDataDetailPk").group(1)
+    sel = must(re.search(r'id="open_api_detail_select".*?</select>', page, re.S),
+               data_id, "open_api_detail_select").group(0)
     seqs = re.findall(r'<option value="(\d+)"', sel)
     if len(seqs) != 1:
         raise SystemExit(f"{data_id}: 오퍼레이션이 {len(seqs)}개 — 스크립트 확장 필요")
@@ -108,7 +116,7 @@ def main():
     for data_id in DATA_IDS:
         title, kind = harvest_spec(data_id, src)
         print(f"{data_id}\t{kind}\t{title}")
-    file_id, sn = find_code_file("15101609")
+    file_id, sn = must(find_code_file("15101609"), "15101609", "코드표 첨부파일(fn_fileDownload)")
     xlsx = fetch(f"{PORTAL}/cmm/cmm/fileDownload.do?atchFileId={file_id}&fileDetailSn={sn}")
     (src / "관세청조회코드.xlsx").write_bytes(xlsx)
     for name, n in xlsx_to_csv(xlsx, codes):
