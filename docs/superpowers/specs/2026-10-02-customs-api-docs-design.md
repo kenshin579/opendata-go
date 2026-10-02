@@ -48,15 +48,48 @@ opendata/<기관>/      # 이후 필요할 때 추가
 | 16 | 시군구별 수출입실적 | 15134344 | `docs/api/customs/시군구별.md` |
 | 17 | 시군구별 품목별 수출입실적 | 15134343 | `docs/api/customs/시군구별품목별.md` |
 
-### 사전 조사로 알게 된 것 (실측 전 — 문서 작성 시 실측으로 확정)
+### 포털 공식 명세 (2026-10-02 수집, 로그인 불필요)
 
-- 게이트웨이 URL: `https://apis.data.go.kr/1220000/{서비스}/{오퍼레이션}`
-  예: 품목별 국가별 = `/1220000/nitemtrade/getNitemtradeList`
-- 품목별 국가별 요청 인자: `serviceKey`(필수), `strtYymm`·`endYymm`(필수, YYYYMM,
-  **조회기간 1년 이내**), `hsSgn`(선택, HS 2·4·6·10단위), `cntyCd`(ISO 2자리).
-  포털 설명상 품목·국가 중 하나는 있어야 한다.
-- 품목별 국가별 응답 필드: `year, statCdCntnKor1, statCd, statKor, hsCd, expWgt, expDlr,
-  impWgt, impDlr, balPayments` (+ 헤더 `resultCode, resultMsg`)
+API 상세 페이지는 두 형식이다 — 15개는 페이지에 **Swagger 2.0 JSON 이 인라인**(`const swaggerJson`)되어
+있고, 2개(15100475·15100476)는 Swagger 없이 `POST /tcs/dss/selectApiDetailFunction.do` 가 HTML 표로
+명세를 준다. 둘 다 로그인 없이 받을 수 있어 **수집 스크립트로 원본을 저장소에 남긴다**(재현 가능).
+공통 코드표 `관세청조회코드_v1.3.xlsx`(시트 11개: 수출수입·품목·국가·성질분류·성질통합분류·대륙·
+경제권·세관구분·수출입종류·항구공항·시도)도 로그인 없이 받아진다.
+
+| # | 오퍼레이션 (`/1220000/...`) | 요청 인자 (`*` 필수, serviceKey 제외) |
+|---|---|---|
+| 1 | `nitemtrade/getNitemtradeList` | strtYymm* endYymm* hsSgn cntyCd* |
+| 2 | `Itemtrade/getItemtradeList` | strtYymm* endYymm* hsSgn |
+| 3 | `nationtrade/getNationtradeList` | strtYymm* endYymm* cntyCd |
+| 4 | `continenttradet/getContinenttradeList` | strtYymm* endYymm* cntnEbkUnfcClsfCd |
+| 5 | `economytrade/getEconomytradeList` | strtYymm* endYymm* cntnEbkUnfcClsfCd |
+| 6 | `Idfytempertrade/getIdfytempertradeList` | strtYymm* endYymm* imexTpcd* imexTmprClsfCd |
+| 7 | `ntempertrade/getNtempertradeList` | strtYymm* endYymm* imexTpcd* imexTmprClsfCd cntyCd* |
+| 8 | `newtempertrade/getNewtempertradeList` | strtYymm* endYymm* imexTpcd* imexTmprUnfcClsfCd |
+| 9 | `nnewtempertrade/getNnewtempertradeList` | strtYymm* endYymm* imexTpcd* imexTmprUnfcClsfCd* cntyCd* |
+| 10 | `kindtrade/getKindtradeList` | strtYymm* endYymm* imexKcd imexTpcd* |
+| 11 | `customstrade/getCustomstradeList` | strtYymm* endYymm* cstmSgnYn |
+| 12 | `porttrade/getPorttradeList` | strtYymm* endYymm* portAirptRegnCd |
+| 13 | `sidotrade/getSidotradeList` | strtYymm* endYymm* sidoCd |
+| 14 | `sidoitemtrade/getSidoitemtradeList` | strtYymm* endYymm* sidoCd* |
+| 15 | `sidotempertrade/getSidotempertradeList` | strtYymm* endYymm* dtlTmprYn sidoCd* imexTpcd* imexTmprClsfCd |
+| 16 | `sigunguperimexacrs/getSigunguPerImexAcrs` | strtYymm* endYymm* sidoCd* |
+| 17 | `sigunguperprlstperacrs/getSigunguPerPrlstPerAcrs` | strtYymm* endYymm* HsSgn* sidoCd* |
+
+(경로 대소문자·오타(`continenttradet`)·`HsSgn` 대문자는 명세 원문 그대로다. 실측으로 확인한다.)
+
+응답 필드는 **이름 체계가 두 계열**로 갈린다 — 2단계 타입 설계에 영향:
+
+- 구 계열(1~12): `year`, `expDlr`/`impDlr`/`balPayments`, `expWgt`/`impWgt`, `expCnt`/`impCnt`,
+  성질·종류 계열은 `impexp`+`dlr`/`wgt` 단일 값 행
+- 시도·시군구 계열(13~17): `priodTitle`, `expUsdAmt`/`impUsdAmt`/`cmtrBlncAmt`, `expLnCnt` 등.
+  16·17만 Swagger 에 `body.totalCount` 가 있다
+
+Swagger 어디에도 `pageNo`·`numOfRows`·`_type` 이 없다 — **페이지네이션과 JSON 지원은 실측 전까지 모른다.**
+
+기타:
+
+- 기간 `strtYymm`·`endYymm` 은 YYYYMM, **조회기간 1년 이내**(명세 문구)
 - 금액 USD — 수출 FOB(신고금액), 수입 CIF(과세가격). 중량 순중량 kg.
 - 출력: XML(포털 표기). JSON(`_type=json` 등) 지원 여부는 실측으로 확인.
 - 갱신: 매월 15일경 전월까지 현행화(정정·취하 반영). 최근월은 잠정치라 바뀔 수 있다.
@@ -70,7 +103,10 @@ docs/api/
 ├── README.md                # 포털 공통 규약 (기관 무관)
 └── customs/
     ├── README.md            # 관세청 인덱스 + 관세청 공통(코드표, 기간 제한, 금액 기준)
-    └── <17개 API>.md
+    ├── <17개 API>.md
+    ├── codes/<시트명>.csv    # 관세청조회코드_v1.3.xlsx 시트 11개를 CSV 로 (2단계 상수·검증용)
+    └── _source/             # 포털 원본: <데이터ID>.swagger.json 또는 <데이터ID>.detail.html, 코드표 xlsx
+scripts/portal-spec/harvest.py   # _source/ 와 codes/ 를 다시 만드는 수집 스크립트 (python3 표준 라이브러리만)
 ```
 
 ### docs/api/README.md — 포털 공통 규약
