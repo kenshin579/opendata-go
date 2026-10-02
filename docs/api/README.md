@@ -94,6 +94,32 @@ HTTP 상태만 보면 (b) 를 놓친다. 응답 본문의 루트 요소로 먼�
 </OpenAPI_ServiceResponse>
 ```
 
+`serviceKey` 누락(HTTP 401):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenAPI_ServiceResponse>
+<cmmMsgHeader>
+  <errMsg>SERVICE_KEY_IS_NULL</errMsg>
+  <returnAuthMsg>서비스 접근거부</returnAuthMsg>
+  <returnReasonCode>20</returnReasonCode>
+</cmmMsgHeader>
+</OpenAPI_ServiceResponse>
+```
+
+없는 오퍼레이션(HTTP 400):
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenAPI_ServiceResponse>
+<cmmMsgHeader>
+  <errMsg>NO_OPENAPI_SERVICE_ERROR</errMsg>
+  <returnAuthMsg>해당 오픈API 서비스가 없거나 폐기됨</returnAuthMsg>
+  <returnReasonCode>12</returnReasonCode>
+</cmmMsgHeader>
+</OpenAPI_ServiceResponse>
+```
+
 | 코드 | errMsg | 의미 | HTTP | 비고 |
 | --- | --- | --- | --- | --- |
 | 1 | APPLICATION_ERROR | 어플리케이션 에러 | | 공지 기준(미실측) |
