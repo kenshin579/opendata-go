@@ -1,0 +1,455 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "관세청 시군구별_품목별 수출입통계정보의 무역수지, 수출건수, 수출금액, 수입건수, 수입금액, 기간 등을 조회 할 수 있는 서비스입니다.\\n개요: 수출입 통관자료를 지역별 중심으로 품목별, 성질별 등 기준에 따라 집계하여 국민, 기업, 공공기관 등이 쉽고 편리하게 조회할 수 있도록 서비스 제공\\n공표주기 : 1개월\\n공표시기 : 매월 15일경 수출입 신고의 정정, 취하 등 변경내역을 반영하여 전월까지의 자료를 현행화\\n통계제공 기준\\n기준일 : 수리일 (기본적으로 신고수리일 기준으로 수출입 통계를 집계) , 출항일 (수출의 경우 출항일 기준으로도 통계 조회 가능하며, 출항일 기준 선택 시 수출통계에만 적용됨)\\n지역 : 수입은 「납세의무자 주소지 우편번호」, 수출은 「제조장소 우편번호」 기준으로 집계\\n금액은 수입(과세가격미화금액), 수출(신고미화금액) 기준임\\n※ '26.7.1.자 전남광주통합,인천 지방행정체계 개편으로 수출입신고 시군구 코드가 변경되었으니, 수출입실적 조회 시 참고하시기 바랍니다\\n - '26.7.1.이후 수출입실적 조회: 지방행정체계 개편반영 시군구 코드 적용\\n - '26. 7월 이전 수출입실적 조회: 개편 전 지방행정체계 시군구 코드 적용",
+    "version": "1.0.0",
+    "title": "관세청_시군구별 품목별 수출입실적"
+  },
+  "host": "apis.data.go.kr/1220000/sigunguperprlstperacrs",
+  "basePath": "",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/getSigunguPerPrlstPerAcrs": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "성공",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "header": {
+                  "type": "object",
+                  "description": "header",
+                  "properties": {
+                    "resultCode": {
+                      "type": "string",
+                      "description": "결과코드",
+                      "properties": {}
+                    },
+                    "resultMsg": {
+                      "type": "string",
+                      "description": "결과메세지",
+                      "properties": {}
+                    }
+                  }
+                },
+                "body": {
+                  "type": "object",
+                  "description": "body",
+                  "properties": {
+                    "items": {
+                      "type": "object",
+                      "description": "items",
+                      "properties": {
+                        "item": {
+                          "type": "object",
+                          "description": "item",
+                          "properties": {
+                            "cmtrBlncAmt": {
+                              "type": "string",
+                              "description": "무역수지",
+                              "properties": {}
+                            },
+                            "expCnt": {
+                              "type": "string",
+                              "description": "수출건수",
+                              "properties": {}
+                            },
+                            "expUsdAmt": {
+                              "type": "string",
+                              "description": "수출미화금액",
+                              "properties": {}
+                            },
+                            "hsSgn": {
+                              "type": "string",
+                              "description": "HS부호",
+                              "properties": {}
+                            },
+                            "impCnt": {
+                              "type": "string",
+                              "description": "수입건수",
+                              "properties": {}
+                            },
+                            "impUsdAmt": {
+                              "type": "string",
+                              "description": "수입미화금액",
+                              "properties": {}
+                            },
+                            "korePrlstNm": {
+                              "type": "string",
+                              "description": "한글품목명",
+                              "properties": {}
+                            },
+                            "priodTitle": {
+                              "type": "string",
+                              "description": "기간(월별)",
+                              "properties": {}
+                            },
+                            "sggNm": {
+                              "type": "string",
+                              "description": "시군구명",
+                              "properties": {}
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "totalCount": {
+                      "type": "string",
+                      "description": "전체결과수",
+                      "properties": {}
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "response"
+              }
+            }
+          }
+        },
+        "tags": [
+          "API 목록"
+        ],
+        "summary": "시군구별 품목별 수출입실적",
+        "description": "관세청 시군구별_품목별 수출입통계정보의 무역수지, 수출건수, 수출금액, 수입건수, 수입금액, 기간 등을 조회 할 수 있는 서비스",
+        "operationId": "getSigunguPerPrlstPerAcrs",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/xml"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "serviceKey",
+          "description": "공공데이터포털에서 받은 인증키",
+          "type": "string",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "strtYymm",
+          "description": "시작년월",
+          "type": "string",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "endYymm",
+          "description": "종료년월",
+          "type": "string",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "HsSgn",
+          "description": "HS부호 6단위",
+          "type": "string",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "sidoCd",
+          "description": "시도코드",
+          "type": "string",
+          "required": true,
+          "in": "query"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "getSigunguPerPrlstPerAcrs_response": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "description": "header",
+          "properties": {
+            "resultCode": {
+              "type": "string",
+              "description": "결과코드"
+            },
+            "resultMsg": {
+              "type": "string",
+              "description": "결과메세지"
+            }
+          }
+        },
+        "body": {
+          "type": "object",
+          "description": "body",
+          "properties": {
+            "items": {
+              "type": "object",
+              "description": "items",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "item",
+                  "properties": {
+                    "cmtrBlncAmt": {
+                      "type": "string",
+                      "description": "무역수지"
+                    },
+                    "expCnt": {
+                      "type": "string",
+                      "description": "수출건수"
+                    },
+                    "expUsdAmt": {
+                      "type": "string",
+                      "description": "수출미화금액"
+                    },
+                    "hsSgn": {
+                      "type": "string",
+                      "description": "HS부호"
+                    },
+                    "impCnt": {
+                      "type": "string",
+                      "description": "수입건수"
+                    },
+                    "impUsdAmt": {
+                      "type": "string",
+                      "description": "수입미화금액"
+                    },
+                    "korePrlstNm": {
+                      "type": "string",
+                      "description": "한글품목명"
+                    },
+                    "priodTitle": {
+                      "type": "string",
+                      "description": "기간(월별)"
+                    },
+                    "sggNm": {
+                      "type": "string",
+                      "description": "시군구명"
+                    }
+                  }
+                }
+              }
+            },
+            "totalCount": {
+              "type": "string",
+              "description": "전체결과수"
+            }
+          }
+        }
+      }
+    }
+  },
+  "swaggerOprtinVOs": [
+    {
+      "oprtinUrl": "https://unipass.customs.go.kr/gxt/rest/tradeStats/getSigunguPerPrlstPerAcrs",
+      "oprtinNm": "시군구별 품목별 수출입실적",
+      "oprtinDc": "관세청 시군구별_품목별 수출입통계정보의 무역수지, 수출건수, 수출금액, 수입건수, 수입금액, 기간 등을 조회 할 수 있는 서비스",
+      "gwSvcNm": "getSigunguPerPrlstPerAcrs",
+      "operationId": "getSigunguPerPrlstPerAcrs",
+      "publicDataTyDetailCode": "PRDE02",
+      "reqList": [
+        {
+          "paramtrNm": "serviceKey",
+          "paramtrDc": "공공데이터포털에서 받은 인증키",
+          "paramtrBassValue": "-",
+          "paramtrTy": "string",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "strtYymm",
+          "paramtrDc": "시작년월",
+          "paramtrBassValue": "201901",
+          "paramtrTy": "string",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "endYymm",
+          "paramtrDc": "종료년월",
+          "paramtrBassValue": "201912",
+          "paramtrTy": "string",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "HsSgn",
+          "paramtrDc": "HS부호 6단위",
+          "paramtrBassValue": "950300",
+          "paramtrTy": "string",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "sidoCd",
+          "paramtrDc": "시도코드",
+          "paramtrBassValue": "11",
+          "paramtrTy": "string",
+          "paramtrDivision": "필수",
+          "ck": true
+        }
+      ],
+      "resList": [
+        {
+          "paramtrNm": "header",
+          "paramtrDc": "header",
+          "arrayYn": "N",
+          "paramtrDefNm": "#/definitions/getSigunguPerPrlstPerAcrs-header",
+          "subDefNm": "getSigunguPerPrlstPerAcrs-header",
+          "paramtrTy": "object",
+          "paramtrDivision": "필수",
+          "ck": true,
+          "subParam": [
+            {
+              "paramtrNm": "resultCode",
+              "paramtrDc": "결과코드",
+              "arrayYn": "N",
+              "paramtrDefNm": "",
+              "paramtrTy": "string",
+              "paramtrDivision": "필수",
+              "ck": true
+            },
+            {
+              "paramtrNm": "resultMsg",
+              "paramtrDc": "결과메세지",
+              "arrayYn": "N",
+              "paramtrDefNm": "",
+              "paramtrTy": "string",
+              "paramtrDivision": "필수",
+              "ck": true
+            }
+          ]
+        },
+        {
+          "paramtrNm": "body",
+          "paramtrDc": "body",
+          "arrayYn": "N",
+          "paramtrDefNm": "#/definitions/getSigunguPerPrlstPerAcrs-body",
+          "subDefNm": "getSigunguPerPrlstPerAcrs-body",
+          "paramtrTy": "object",
+          "paramtrDivision": "필수",
+          "ck": true,
+          "subParam": [
+            {
+              "paramtrNm": "items",
+              "paramtrDc": "items",
+              "arrayYn": "N",
+              "paramtrDefNm": "#/definitions/getSigunguPerPrlstPerAcrs-items",
+              "subDefNm": "getSigunguPerPrlstPerAcrs-items",
+              "paramtrTy": "object",
+              "paramtrDivision": "필수",
+              "ck": true,
+              "subParam": [
+                {
+                  "paramtrNm": "item",
+                  "paramtrDc": "item",
+                  "arrayYn": "N",
+                  "paramtrDefNm": "#/definitions/getSigunguPerPrlstPerAcrs-item",
+                  "subDefNm": "getSigunguPerPrlstPerAcrs-item",
+                  "paramtrTy": "object",
+                  "paramtrDivision": "필수",
+                  "ck": true,
+                  "subParam": [
+                    {
+                      "paramtrNm": "cmtrBlncAmt",
+                      "paramtrDc": "무역수지",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "expCnt",
+                      "paramtrDc": "수출건수",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "expUsdAmt",
+                      "paramtrDc": "수출미화금액",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "hsSgn",
+                      "paramtrDc": "HS부호",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "impCnt",
+                      "paramtrDc": "수입건수",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "impUsdAmt",
+                      "paramtrDc": "수입미화금액",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "korePrlstNm",
+                      "paramtrDc": "한글품목명",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "priodTitle",
+                      "paramtrDc": "기간(월별)",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "sggNm",
+                      "paramtrDc": "시군구명",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "paramtrNm": "totalCount",
+              "paramtrDc": "전체결과수",
+              "arrayYn": "N",
+              "paramtrDefNm": "",
+              "paramtrTy": "string",
+              "paramtrDivision": "필수",
+              "ck": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

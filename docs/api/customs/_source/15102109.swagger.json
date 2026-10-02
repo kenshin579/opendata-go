@@ -1,0 +1,485 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "* 성질별 분류란 1972년부터 무역통계 작성 시 활용된 분류기준이며,  HS Code 10단위 세번을 상품 특성에 맞게 유사한 성질을 가진 품목끼리 집계한 분류체계(수입•수출 별도 분류)입니다. 우리나라 산업 발전에 따라 1998년 전면 개편하였으며, 이후 5년마다 HS가 개정됨에 따라 일부 개편되고 있습니다. \\n수입은 3大 대분류(소비재, 원자재, 자본재), 수출은 4大 대분류(식료 및 직접소비재, 원료 및 연료, 경공업품, 중화학 공업품)하고 있으며 최하위단위(세분류) 기준 수출 151개, 수입 180개 분류로 구성되어 있습니다.\\n\\n* 공공데이터 포털에서 ‘HSK별 신성질별_성질별 분류’ 데이터 또는 관세청 수출입무역통계 누리집  분류수출입무역통계 → 누리집 수출입실적 → (신)성질별 통계 → (신)성질명 세부검색 및 공지사항의 ‘2022 HS 신성질별, 성질별 연계표’를 통해 각 분류에 해당하는 HS코드 확인하실 수 있습니다.\\n\\n* 조회기간, 수출수입구분코드, 수출입성질분류코드를 이용하여 관세청 수출입통계정보의 기간, 수출입구분, 성질명, 성질명코드, 중량, 금액, 국가코드 등을 조회 할 수 있는 서비스.\\n* 강원도가 강원특별자치도로 변경('23.6.11.)됨에 따라  참고자료에 강원특별자치도의 시도코드( 51)를 추가 반영하였습니다.\\n※ '26.7.1.자 전남광주통합,인천 지방행정체계 개편으로 수출입신고 시도코드가 변경되었으니, 수출입실적 조회 시 참고하시기 바랍니다\\n - '26.7.1.이후 수출입실적 조회: 전남광주통합특별시 코드 12\\n - '26. 7월 이전 수출입실적 조회: 광주광역시 코드 29 / 전라남도 코드 46",
+    "version": "1.0.0",
+    "title": "관세청_성질별 수출입실적(GW)"
+  },
+  "host": "apis.data.go.kr/1220000/Idfytempertrade",
+  "basePath": "",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/getIdfytempertradeList": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "성공",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "header": {
+                  "type": "object",
+                  "description": "header",
+                  "properties": {
+                    "resultMsg": {
+                      "type": "string",
+                      "description": "결과메시지",
+                      "properties": {}
+                    },
+                    "resultCode": {
+                      "type": "string",
+                      "description": "결과코드",
+                      "properties": {}
+                    }
+                  }
+                },
+                "body": {
+                  "type": "object",
+                  "description": "body",
+                  "properties": {
+                    "items": {
+                      "type": "object",
+                      "description": "items",
+                      "properties": {
+                        "item": {
+                          "type": "object",
+                          "description": "item",
+                          "properties": {
+                            "dlr": {
+                              "type": "number",
+                              "description": "금액(달러)",
+                              "properties": {}
+                            },
+                            "godsCd": {
+                              "type": "string",
+                              "description": "성질명코드",
+                              "properties": {}
+                            },
+                            "godsKor": {
+                              "type": "string",
+                              "description": "성질명",
+                              "properties": {}
+                            },
+                            "impexp": {
+                              "type": "string",
+                              "description": "수출입구분",
+                              "properties": {}
+                            },
+                            "statCd": {
+                              "type": "string",
+                              "description": "국가코드",
+                              "properties": {}
+                            },
+                            "statCdCntnKor1": {
+                              "type": "string",
+                              "description": "국가명",
+                              "properties": {}
+                            },
+                            "wgt": {
+                              "type": "number",
+                              "description": "중량(KG)",
+                              "properties": {}
+                            },
+                            "year": {
+                              "type": "string",
+                              "description": "기간",
+                              "properties": {}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "response"
+              }
+            }
+          }
+        },
+        "tags": [
+          "API 목록"
+        ],
+        "summary": "성질별 수출입실적 조회",
+        "description": "성질별 수출입실적 조회목록 입니다.",
+        "operationId": "getIdfytempertradeList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/xml"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "serviceKey",
+          "description": "공공데이터포털에서 받은 인증키",
+          "type": "string",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "strtYymm",
+          "description": "시작년월",
+          "type": "number",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "endYymm",
+          "description": "종료년월",
+          "type": "number",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "imexTpcd",
+          "description": "수출입구분코드",
+          "type": "number",
+          "required": true,
+          "in": "query"
+        },
+        {
+          "name": "imexTmprClsfCd",
+          "description": "수출입성질분류코드",
+          "type": "number",
+          "required": false,
+          "in": "query"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "body": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "$ref": "#/definitions/items"
+        }
+      }
+    },
+    "items": {
+      "type": "object",
+      "properties": {
+        "item": {
+          "$ref": "#/definitions/item"
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "properties": {
+        "dlr": {
+          "type": "number",
+          "description": "금액(달러)"
+        },
+        "godsCd": {
+          "type": "string",
+          "description": "성질명코드"
+        },
+        "godsKor": {
+          "type": "string",
+          "description": "성질명"
+        },
+        "impexp": {
+          "type": "string",
+          "description": "수출입구분"
+        },
+        "statCd": {
+          "type": "string",
+          "description": "국가코드"
+        },
+        "statCdCntnKor1": {
+          "type": "string",
+          "description": "국가명"
+        },
+        "wgt": {
+          "type": "number",
+          "description": "중량(KG)"
+        },
+        "year": {
+          "type": "string",
+          "description": "기간"
+        }
+      }
+    },
+    "header": {
+      "type": "object",
+      "properties": {
+        "resultCode": {
+          "type": "string",
+          "description": "결과코드"
+        },
+        "resultMsg": {
+          "type": "string",
+          "description": "결과메시지"
+        }
+      }
+    },
+    "getIdfytempertradeList_response": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "description": "header",
+          "properties": {
+            "resultMsg": {
+              "type": "string",
+              "description": "결과메시지"
+            },
+            "resultCode": {
+              "type": "string",
+              "description": "결과코드"
+            }
+          }
+        },
+        "body": {
+          "type": "object",
+          "description": "body",
+          "properties": {
+            "items": {
+              "type": "object",
+              "description": "items",
+              "properties": {
+                "item": {
+                  "type": "object",
+                  "description": "item",
+                  "properties": {
+                    "dlr": {
+                      "type": "number",
+                      "description": "금액(달러)"
+                    },
+                    "godsCd": {
+                      "type": "string",
+                      "description": "성질명코드"
+                    },
+                    "godsKor": {
+                      "type": "string",
+                      "description": "성질명"
+                    },
+                    "impexp": {
+                      "type": "string",
+                      "description": "수출입구분"
+                    },
+                    "statCd": {
+                      "type": "string",
+                      "description": "국가코드"
+                    },
+                    "statCdCntnKor1": {
+                      "type": "string",
+                      "description": "국가명"
+                    },
+                    "wgt": {
+                      "type": "number",
+                      "description": "중량(KG)"
+                    },
+                    "year": {
+                      "type": "string",
+                      "description": "기간"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "swaggerOprtinVOs": [
+    {
+      "oprtinUrl": "https://unipass.customs.go.kr/gxt/rest/tradeStats/getIdfytempertradeList",
+      "oprtinNm": "성질별 수출입실적 조회",
+      "oprtinDc": "성질별 수출입실적 조회목록 입니다.",
+      "gwSvcNm": "getIdfytempertradeList",
+      "operationId": "getIdfytempertradeList",
+      "publicDataTyDetailCode": "PRDE02",
+      "reqList": [
+        {
+          "paramtrNm": "serviceKey",
+          "paramtrBassValue": "-",
+          "paramtrDc": "공공데이터포털에서 받은 인증키",
+          "paramtrTy": "string",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "strtYymm",
+          "paramtrBassValue": "201601",
+          "paramtrDc": "시작년월",
+          "paramtrTy": "number",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "endYymm",
+          "paramtrBassValue": "201601",
+          "paramtrDc": "종료년월",
+          "paramtrTy": "number",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "imexTpcd",
+          "paramtrBassValue": "1",
+          "paramtrDc": "수출입구분코드",
+          "paramtrTy": "number",
+          "paramtrDivision": "필수",
+          "ck": true
+        },
+        {
+          "paramtrNm": "imexTmprClsfCd",
+          "paramtrBassValue": "11101",
+          "paramtrDc": "수출입성질분류코드",
+          "paramtrTy": "number",
+          "paramtrDivision": "옵션",
+          "ck": true
+        }
+      ],
+      "resList": [
+        {
+          "paramtrNm": "header",
+          "paramtrDc": "header",
+          "arrayYn": "N",
+          "paramtrDefNm": "#/definitions/header",
+          "subDefNm": "header",
+          "paramtrTy": "object",
+          "paramtrDivision": "필수",
+          "ck": true,
+          "subParam": [
+            {
+              "paramtrNm": "resultMsg",
+              "paramtrDc": "결과메시지",
+              "arrayYn": "N",
+              "paramtrDefNm": "",
+              "paramtrTy": "string",
+              "paramtrDivision": "필수",
+              "ck": true
+            },
+            {
+              "paramtrNm": "resultCode",
+              "paramtrDc": "결과코드",
+              "arrayYn": "N",
+              "paramtrDefNm": "",
+              "paramtrTy": "string",
+              "paramtrDivision": "필수",
+              "ck": true
+            }
+          ]
+        },
+        {
+          "paramtrNm": "body",
+          "paramtrDc": "body",
+          "arrayYn": "N",
+          "paramtrDefNm": "#/definitions/body",
+          "subDefNm": "body",
+          "paramtrTy": "object",
+          "paramtrDivision": "필수",
+          "ck": true,
+          "subParam": [
+            {
+              "paramtrNm": "items",
+              "paramtrDc": "items",
+              "arrayYn": "N",
+              "paramtrDefNm": "#/definitions/items",
+              "subDefNm": "items",
+              "paramtrTy": "object",
+              "paramtrDivision": "필수",
+              "ck": true,
+              "subParam": [
+                {
+                  "paramtrNm": "item",
+                  "paramtrDc": "item",
+                  "arrayYn": "N",
+                  "paramtrDefNm": "#/definitions/item",
+                  "subDefNm": "item",
+                  "paramtrTy": "object",
+                  "paramtrDivision": "필수",
+                  "ck": true,
+                  "subParam": [
+                    {
+                      "paramtrNm": "dlr",
+                      "paramtrDc": "금액(달러)",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "number",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "godsCd",
+                      "paramtrDc": "성질명코드",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "godsKor",
+                      "paramtrDc": "성질명",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "impexp",
+                      "paramtrDc": "수출입구분",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "statCd",
+                      "paramtrDc": "국가코드",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "statCdCntnKor1",
+                      "paramtrDc": "국가명",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "wgt",
+                      "paramtrDc": "중량(KG)",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "number",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    },
+                    {
+                      "paramtrNm": "year",
+                      "paramtrDc": "기간",
+                      "arrayYn": "N",
+                      "paramtrDefNm": "",
+                      "paramtrTy": "string",
+                      "paramtrDivision": "필수",
+                      "ck": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
